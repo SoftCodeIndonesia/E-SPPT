@@ -1,6 +1,16 @@
 var table = dataTablesCreated();
 var base_url = base_url;
 
+var alert_label = $(".alert_label").val();
+var alert_description = $(".alert_description").val();
+var alert_type = $(".alert_type").val();
+
+if(alert_type == "Success"){
+    callbackAlert(alert_label,alert_description, alert_type);
+}else if(alert_type == "Failed"){
+    failledCallback(alert_description);
+}
+
 $(document).on('click','#btn-delete', function (e) { 
     e.preventDefault();
     var menu_id = $(this).data('id');
@@ -17,9 +27,12 @@ $(document).on('click','#btn-delete', function (e) {
                     callbackAlert("Success","Data berhasil dihapus!", "success");
                     table.destroy();
                     table = dataTablesCreated();
+                    
                 }else{
                     failledCallback("Data gagal dihapus!");
                 }
+
+                window.location.href = base_url + 'menu';
             }
         });
     }

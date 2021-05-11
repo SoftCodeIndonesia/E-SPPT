@@ -2,7 +2,7 @@ var index = 0;
 setParent();
 iconClick();
 function iconClick() { 
-    $('li').click(function (e) {
+    $('.btn-icon').click(function (e) {
         e.preventDefault();
         
         if($(this).hasClass('border-icon')){
@@ -24,7 +24,7 @@ function setParent() {
             $("#option-parent").append('');
             $.each(response, function (i, value) { 
                  var content = '';
-                 content += `<option value"${value.menu_id}">${capitalize(value.menu)}</option>`;
+                 content += `<option value="${value.menu_id}">${capitalize(value.menu)}</option>`;
                  $("#option-parent").append(content);
             });
         }
@@ -86,24 +86,31 @@ $('#form-create').submit(function (e) {
     var dataMenu = {};
     var dataPermission = [];
     $.each(dataForm, function (i, val) { 
-        if(i < 5){
+        if(i < 6){
             dataMenu[val.name] = val.value;
         }
     });
 
     var index = 5;
     do {
-        var permissionNameValue = dataForm[index].value;
-        var descriptionNameValue = dataForm[index + 1].value;
-        var permission = {
-            permission_name: permissionNameValue,
-            description_permission: descriptionNameValue
-        }
         
-        dataPermission.push(permission);
 
+        if(typeof dataForm[index + 1] != "undefined" && typeof dataForm[index + 2] != "undefined"){
+            var permissionNameValue = dataForm[index + 1].value;
+            var descriptionNameValue = dataForm[index + 2].value;
+            var permission = {
+                permission_name: permissionNameValue,
+                description_permission: descriptionNameValue
+            }
+            
+            dataPermission.push(permission);
+    
+            
+        }
         index = index + 2;
+        
     } while (index < dataForm.length);
+
 
     
     $.ajax({
@@ -115,10 +122,28 @@ $('#form-create').submit(function (e) {
         },
         dataType: "json",
         success: function (response) {
-            console.log(response);
+            if(response > 0){
+                $('.alert_label').val("Success");
+                $('.alert_description').val("Data berhasil ditambahkan!");
+                $('.alert_type').val("success");
+            }else{
+                $('.alert_description').val("Data gagal ditambahkan!");
+                $('.alert_type').val("failed");
+            }
+
+            window.location.href = base_url + 'menu';
         }
     });
 
     $(".btn-submit").prop('disabled', false);
+});
+
+$('.btn-icon').click(function (e) { 
+    $('.modal').modal("hide");
+    var icon = $(this).children().attr('class');
+    $('.icon_menu').val(icon);
+    
+    e.preventDefault();
+    
 });
 

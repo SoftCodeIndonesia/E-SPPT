@@ -1,4 +1,5 @@
 <div class="container">
+    <input type="hidden" name="menu_id" id="menu_id" value="<?= $this->param1 ?>">
     <form class="form-horizontal" id="form-create">
         <div class="block">
 
@@ -59,13 +60,6 @@
 
         </div>
 
-        <div class="content-permission">
-
-        </div>
-
-        <button type="button" class="btn btn-default" id="add-permission" style="margin-bottom: 15px;">Tambahkan
-            permission <span class="icon-plus-circle pull-right"></span></button>
-
         <div class="row">
             <div class="col-md-12">
                 <p><button type="submit" class="btn btn-primary btn-block btn-submit">simpan</button></p>
@@ -73,7 +67,6 @@
         </div>
     </form>
 </div>
-
 
 <div class="modal fade" id="modal-full" tabindex="-1" role="dialog" aria-labelledby="modal-full-header">
     <div class="modal-dialog modal-fw" role="document">

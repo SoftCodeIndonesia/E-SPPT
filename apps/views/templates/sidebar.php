@@ -11,12 +11,8 @@
                 <?php foreach ($this->submenu as $dataSub) : ?>
                 <?php if ($dataSub['parent_id'] == $data['menu_id']) : ?>
                 <ul>
-                    <?php foreach ($this->submenu as $dataSub) : ?>
-                    <?php if ($dataSub['parent_id'] == $data['menu_id']) : ?>
                     <li><a href="<?= BASE_URL . $dataSub['route'] ?>"><span class="<?= $dataSub['icon'] ?>"></span>
                             <?= $dataSub['name'] ?></a></li>
-                    <?php endif; ?>
-                    <?php endforeach; ?>
                 </ul>
                 <?php endif; ?>
                 <?php endforeach; ?>

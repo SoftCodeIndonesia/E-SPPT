@@ -56,7 +56,9 @@
 </head>
 
 <body>
-
+    <input type="hidden" class="alert_label" name="alert_label" value="">
+    <input type="hidden" class="alert_description" name="alert_description" value="">
+    <input type="hidden" class="alert_type" name="alert_type" value="">
     <!-- APP WRAPPER -->
     <div class="app">
 

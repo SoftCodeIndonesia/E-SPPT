@@ -7,6 +7,7 @@ class Controller
     protected $js;
     protected $permission;
     protected $icons;
+    protected $param1;
 
     public function view($view, $data = [])
     {
@@ -22,9 +23,10 @@ class Controller
             require_once '../apps/views/' . $view . '.php';
         } else {
             $helper = new Helper;
-
+            $this->param1 = $helper->uriSegment(0);
             $this->icons = $helper->getIcons();
             if ($helper->checkPermission($this->permission)) {
+
                 require_once '../apps/views/templates/header.php';
                 require_once '../apps/views/' . $view . '.php';
                 require_once '../apps/views/templates/footer.php';
