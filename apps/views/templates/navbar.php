@@ -1,4 +1,5 @@
 <!-- START APP CONTENT -->
+<?php error_reporting(0) ?>
 <div class="app-content app-sidebar-left">
     <!-- START APP HEADER -->
     <div class="app-header">

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 class Controller
 {
 
@@ -12,8 +13,10 @@ class Controller
     public function view($view, $data = [])
     {
 
-        $this->menu = $this->getMenu();
-        $this->submenu = $this->getSubMenu();
+        if(isset($_SESSION['userdata'])){
+            $this->menu = $this->getMenu();
+            $this->submenu = $this->getSubMenu();
+        }
 
 
         $this->js = $data['js'];
@@ -25,6 +28,7 @@ class Controller
             $helper = new Helper;
             $this->param1 = $helper->uriSegment(0);
             $this->icons = $helper->getIcons();
+            
             if ($helper->checkPermission($this->permission)) {
 
                 require_once '../apps/views/templates/header.php';

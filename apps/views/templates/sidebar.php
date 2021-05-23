@@ -6,7 +6,7 @@
             <?php foreach ($this->menu as $data) : ?>
 
             <li>
-                <a href="<?= BASE_URL ?>assets/vendor/#"><span class="<?= $data['icon'] ?>"></span>
+                <a href="<?= BASE_URL ?><?= $data['route'] ?>"><span class="<?= $data['icon'] ?>"></span>
                     <?= $data['name'] ?></a>
                 <?php foreach ($this->submenu as $dataSub) : ?>
                 <?php if ($dataSub['parent_id'] == $data['menu_id']) : ?>

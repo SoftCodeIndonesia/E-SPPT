@@ -56,8 +56,12 @@ class Helper extends Controller
     {
         $url = $this->trimUrl();
 
-        array_splice($url, 0, 7);
-        return $url[$index];
+        $callback = $url;
+        if(count($url) > 6){
+            array_splice($url, 0, 7);
+            $callback = $url[$index];
+        }
+        return $callback;
     }
 
     public function checkTypeFile($fileName)
@@ -93,6 +97,7 @@ class Helper extends Controller
 
         $validPermission = $this->model->checkPermission($menu, $permissionName);
 
+       
         return !empty($validPermission) ? true : false;
     }
 

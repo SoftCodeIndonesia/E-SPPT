@@ -134,7 +134,7 @@ class M_menu
 
     public function checkPermission($menu, $permission_name)
     {
-        $query = "SELECT *,p.name as permission_name FROM user_permission up LEFT JOIN permission p ON up.permission_id = p.permission_id LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE m.name = :menu AND p.name = :permission_name AND up.user_id = :user_id";
+        $query = "SELECT *,p.name as permission_name FROM user_permission up LEFT JOIN permission p ON up.permission_id = p.permission_id LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE m.route = :menu AND p.name = :permission_name AND up.user_id = :user_id";
 
         $this->db->query($query);
         $this->db->bind('user_id', $_SESSION['userdata']['user_id']);
