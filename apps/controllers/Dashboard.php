@@ -1,6 +1,6 @@
 <?php
 
-class Home extends Controller
+class Dashboard extends Controller
 {
     protected $modelMenu;
 
@@ -11,7 +11,9 @@ class Home extends Controller
 
     public function index()
     {
+        
+        $this->permission = 'all permissions';
         $data['title'] = 'E-SPPT kabupaten pekalongan';
-        $this->view('home/index', $data);
+        $this->view('dashboard/index', $data);
     }
 }

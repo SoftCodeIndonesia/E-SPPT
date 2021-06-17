@@ -55,13 +55,21 @@ class Helper extends Controller
     public function uriSegment($index)
     {
         $url = $this->trimUrl();
-
+        
         $callback = $url;
         if(count($url) > 6){
             array_splice($url, 0, 7);
             $callback = $url[$index];
+        }else{
+            $callback = null;
         }
         return $callback;
+    }
+
+    public function currentController()
+    {
+        $url = $this->trimUrl();
+        return $url[5];   
     }
 
     public function checkTypeFile($fileName)
@@ -89,14 +97,25 @@ class Helper extends Controller
         return $subMenu;
     }
 
+    public function getMenuActived()
+    {
+      
+        $menuActived = $this->model->getMenuByRoute($this->currentController());
+
+        return $menuActived;
+    }
+
     public function checkPermission($permissionName)
     {
         // $allPermission = $this->model->getPermissionByMenuId($menu_id);
         // var_dump($this->uriSegment())
         $menu = $this->trimUrl()[5];
-
+        if($menu == null){
+            $menu = 'dashboard';
+        }
         $validPermission = $this->model->checkPermission($menu, $permissionName);
 
+  
        
         return !empty($validPermission) ? true : false;
     }

@@ -1,4 +1,3 @@
-
 </div>
 </div>
 <!-- END APP CONTAINER -->
@@ -23,6 +22,7 @@
 <!-- END APP WRAPPER -->
 
 <!-- START SCRIPTS -->
+
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/bootstrap/bootstrap.min.js"></script>
@@ -79,6 +79,15 @@
 <script src="<?= BASE_URL ?>assets/js/sweetAlert.js"></script>
 <script>
 var base_url = "<?= BASE_URL ?>";
+
+function hanyaAngka(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    console.log(charCode);
+    if (charCode !== 32 && (charCode < 48 || charCode > 57) && charCode !== 46 && charCode !== 45)
+
+        return false;
+    return true;
+}
 
 function failledCallback(title) {
     return swal(title);

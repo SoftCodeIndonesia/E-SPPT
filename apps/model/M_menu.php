@@ -16,9 +16,9 @@ class M_menu
 
         if ($parent !== null && $parent == 0) {
 
-            $query = "SELECT *,m.name as menu, m.created_at as created_at, u.name as created_by FROM user_permission up LEFT JOIN user u ON u.user_id = up.user_id LEFT JOIN permission p ON p.permission_id = up.permission_id LEFT JOIN user us ON us.user_id = up.created_by LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE up.user_id = :user_id AND m.parent_id = " . $parent . " GROUP BY m.menu_id ORDER BY m.menu_id DESC";
+            $query = "SELECT *,m.name as menu, m.created_at as created_at, u.name as created_by FROM user_permission up LEFT JOIN user u ON u.user_id = up.user_id LEFT JOIN permission p ON p.permission_id = up.permission_id LEFT JOIN user us ON us.user_id = up.created_by LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE up.user_id = :user_id AND m.parent_id = " . $parent . " GROUP BY m.menu_id ORDER BY m.menu_id ASC";
         } else {
-            $query = "SELECT *,m.name as menu, m.created_at as created_at, u.name as created_by FROM user_permission up LEFT JOIN user u ON u.user_id = up.user_id LEFT JOIN permis sion p ON p.permission_id = up.permission_id LEFT JOIN user us ON us.user_id = up.created_by LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE up.user_id = :user_id GROUP BY m.menu_id ORDER BY m.menu_id DESC";
+            $query = "SELECT *,m.name as menu, m.created_at as created_at, u.name as created_by FROM user_permission up LEFT JOIN user u ON u.user_id = up.user_id LEFT JOIN permis sion p ON p.permission_id = up.permission_id LEFT JOIN user us ON us.user_id = up.created_by LEFT JOIN menu m ON m.menu_id = p.menu_id WHERE up.user_id = :user_id GROUP BY m.menu_id ORDER BY m.menu_id ASC";
         }
 
 
@@ -26,6 +26,18 @@ class M_menu
         $this->db->query($query);
         $this->db->bind('user_id', $_SESSION['userdata']['user_id']);
         return $this->db->resultSet();
+    }
+
+    public function getMenuByRoute($route)
+    {
+ 
+        
+        $query = "SELECT * FROM menu WHERE route = :route";
+
+        $this->db->query($query);
+        $this->db->bind('route',$route);
+
+        return $this->db->single();
     }
 
     public function getSubMenuByUser()
@@ -43,6 +55,7 @@ class M_menu
         $query = "SELECT *,m.menu_id as menu_id,m.name as menu, m.created_at as created_at, u.name as created_by FROM menu m LEFT JOIN user u ON u.user_id = m.created_by LEFT JOIN permission p ON p.permission_id = m.menu_id ";
 
         if (strlen($_POST['search']['value']) > 0) {
+            $query = $query . 'WHERE ';
             foreach ($this->column_search as $key => $column) {
                 $explode = explode('.', $column);
                 if ($key + 1 == count($this->column_search) - 1) {

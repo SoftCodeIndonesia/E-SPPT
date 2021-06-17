@@ -12,8 +12,8 @@
         <div class="block-content">
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="<?= BASE_URL ?>menu/create" type="button" class="btn btn-primary"><span
-                            class="icon-plus"></span> Tambah E-SPPT</a>
+                    <a href="<?= BASE_URL ?><?= $this->currentController ?>/create" type="button"
+                        class="btn btn-primary"><span class="icon-plus"></span> Tambah E-SPPT</a>
                 </div>
             </div>
         </div>
@@ -30,23 +30,23 @@
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
                                         colspan="1" aria-sort="ascending"
-                                        aria-label="Name: activate to sort column descending" style="width: 154px;">Owner
+                                        aria-label="Name: activate to sort column descending" style="width: 154px;">
+                                        No E-Sppt
+                                    </th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
+                                        colspan="1" aria-sort="ascending"
+                                        aria-label="Name: activate to sort column descending" style="width: 200px;">
+                                        Pemilik
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
                                         colspan="1" aria-label="Position: activate to sort column ascending"
-                                        style="width: 251px;">Payment method</th>
+                                        style="width: 50px;">Metode pembayaran</th>
                                     <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
                                         colspan="1" aria-label="Position: activate to sort column ascending"
-                                        style="width: 251px;">NOP</th>
+                                        style="width: 300px;">NOP</th>
                                     <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
                                         colspan="1" aria-label="Position: activate to sort column ascending"
-                                        style="width: 251px;">Due date</th>
-                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
-                                        colspan="1" aria-label="Age: activate to sort column ascending"
-                                        style="width: 100px;">Created At</th>
-                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
-                                        colspan="1" aria-label="Start date: activate to sort column ascending"
-                                        style="width: 119px;">Created By</th>
+                                        style="width: 251px;">Jatuh tempo</th>
                                     <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
                                         colspan="1" aria-label="Salary: activate to sort column ascending"
                                         style="width: 94px;">Action</th>

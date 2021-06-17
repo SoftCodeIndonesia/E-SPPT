@@ -1,14 +1,17 @@
 <?php
 error_reporting(0);
+
 class Controller
 {
-
+    
     protected $menu;
     protected $submenu;
     protected $js;
     protected $permission;
     protected $icons;
     protected $param1;
+    protected $currentController;
+    protected $menuActived;
 
     public function view($view, $data = [])
     {
@@ -18,7 +21,6 @@ class Controller
             $this->submenu = $this->getSubMenu();
         }
 
-
         $this->js = $data['js'];
 
         $folder = explode('/', $view);
@@ -27,8 +29,11 @@ class Controller
         } else {
             $helper = new Helper;
             $this->param1 = $helper->uriSegment(0);
-            $this->icons = $helper->getIcons();
             
+            $this->icons = $helper->getIcons();
+            $this->currentController = $helper->currentController();
+            $this->menuActived = $helper->getMenuActived();
+         
             if ($helper->checkPermission($this->permission)) {
 
                 require_once '../apps/views/templates/header.php';

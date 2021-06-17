@@ -12,8 +12,8 @@
         <div class="block-content">
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="<?= BASE_URL ?>menu/create" type="button" class="btn btn-primary"><span
-                            class="icon-plus"></span> Tambah Owner</a>
+                    <a href="<?= BASE_URL ?><?= $this->currentController ?>/create" type="button"
+                        class="btn btn-primary"><span class="icon-plus"></span> Tambah Owner</a>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <table class="table table-striped table-bordered datatable-extended dataTable no-footer"
-                            id="DataTables_Table_1" role="grid" aria-describedby="DataTables_Table_1_info">
+                            id="tableOwner" role="grid" aria-describedby="DataTables_Table_1_info">
                             <thead>
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1"
@@ -55,3 +55,28 @@
 
     </div>
 </div>
+
+<!-- MODAL BACKDROP DISABLE -->
+<div class="modal fade" id="modal-backdrop-disable" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="app-heading app-heading-small app-heading-condensed">
+                    <div class="title">
+                        <h5 id="title-name">Disable Backdrop</h5>
+                        <p id="address">Aenean quis quam diam. Nam fringilla arcu ipsum.</p>
+                    </div>
+                </div>
+
+
+                <div class="content-address">
+
+                </div>
+
+                <p class="text-right"><button class="btn btn-default" data-dismiss="modal">Close</button></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MODAL BACKDROP DISABLE -->

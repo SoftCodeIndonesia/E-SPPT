@@ -12,4 +12,4 @@ define('DB_NAME', 'penduduk_eSPPT');
 
 
 // DEFAULT CONTROLLER
-define('MAIN_CONTROLLER', 'Home');
+define('MAIN_CONTROLLER', 'Dashboard');
