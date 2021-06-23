@@ -76,5 +76,10 @@ class M_object
         return $this->db->num_rows();
     }
 
+    public function update_object_tax($object, $tax_id)
+    {
+        $query = 'UPDATE object_tax SET object_id = :object_id, '
+    }
+
 
 }

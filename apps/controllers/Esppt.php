@@ -222,7 +222,7 @@
                 $data = [];
 
                 $data[] = '<tr role="row" class="odd"><td><a href="" data-id="'.$value['tax_id'].'" class="btn btn-default btn-delete-object btn-icon btn-danger text-white"><span class="icon-trash2 color-white"></span></a></td>';
-                $data[] = '<td class=""><input type="text" value="'.$value['name'].'" name="nama_object_pajak['.$key.']" data-index="'.$key.'" id="fild_object_pajak_'.$key.'" class="form-control nama-object-pajak" placeholder="Nama object pajak" autocomplete="off"><div id="nama_object_pajak_0"></div> </td>';
+                $data[] = '<td class=""><input type="text" value="'.$value['name'].'" name="nama_object_pajak['.$key.']" data-index="'.$key.'" id="fild_object_pajak_'.$key.'" class="form-control nama-object-pajak" placeholder="Nama object pajak" autocomplete="off"><input type="hidden" value="'.$value['tax_id'].'" name="tax_id['.$key.']" class="form-control"><div id="nama_object_pajak_0"></div> </td>';
                 $data[] = '<td class="sorting_1"><input type="text" value="'.$value['luas'].'" name="luas['.$key.']" id="luas_0" data-index="'.$key.'" class="form-control luas" placeholder="0" autocomplete="off"></td>';
                 $data[] = '<td><input type="text" value="'.$value['kelas'].'" name="kelas['.$key.']" id="kelas_'.$key.'" data-index="'.$key.'" class="form-control kelas" placeholder="0" autocomplete="off"></td>';
                 $data[] = '<td><input type="text" value="'.$value['njop_value'].'" name="njop['.$key.']" id="njop_'.$key.'" data-index="'.$key.'" class="form-control njop" placeholder="0" autocomplete="off"></td>';
@@ -290,6 +290,7 @@
                 $object_id = $this->modelObject->getObjectByName($object['name']);
 
                 if($object_id){
+                    $tax_id = $_POST['tax_id'][$key];
                     $object_tax['sppt_id'] = $sppt['unique_id'];
                     $object_tax['object_id'] = $object_id['object_id'];
                     $object_tax['luas'] = $_POST['luas'][$key];
@@ -297,7 +298,7 @@
                     $object_tax['njop_value'] = $_POST['njop'][$key];
                     $object_tax['total_njop'] = $_POST['total_njop'][$key];
                     
-                    $this->modelObject->insert_object_tax($object_tax);
+                    $this->modelObject->update_object_tax($object_tax, $tax_id);
                 }else{
                     $object_id = $this->modelObject->insert($object);
                     $object_tax['sppt_id'] = $sppt['unique_id'];
@@ -307,7 +308,7 @@
                     $object_tax['njop_value'] = $_POST['njop'][$key];
                     $object_tax['total_njop'] = $_POST['total_njop'][$key];
                     
-                    $this->modelObject->insert_object_tax($object_tax);
+                    $this->modelObject->update_object_tax($object_tax, $tax_id);
                 }
             }
             
