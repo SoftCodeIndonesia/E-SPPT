@@ -85,4 +85,22 @@ class M_sppt
         return $this->db->single();
     }
 
+    public function updateSppt($data)
+    {
+        $query = "UPDATE sppt SET owner_id = :owner_id, payment_id = :payment_id, nop = :nop, pbb_terhutang = :pbb_terhutang, due_date = :due_date, created_at = :created_at, created_by = :created_by";
+        $this->db->query($query);
+
+        $this->db->bind("sppt_id", $data['unique_id']);
+        $this->db->bind('owner_id', $data['owner_id']);
+        $this->db->bind('payment_id', $data['payment_id']);
+        $this->db->bind('nop', $data['nop']);
+        $this->db->bind('pbb_terhutang', $data['pbb_terhutang']);
+        $this->db->bind('due_date', $data['due_date']);
+        $this->db->bind('created_at', $data['created_at']);
+        $this->db->bind('created_by', $data['created_by']);
+
+        
+        return $this->db->num_rows();
+    }
+
 }

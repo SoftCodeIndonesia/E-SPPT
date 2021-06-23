@@ -107,4 +107,21 @@ class M_payment
         return $this->db->num_rows();
     }
 
+    public function searchPayment($keyword)
+    {
+        $name = "%$keyword%";
+        $query = "SELECT * FROM payment_bank WHERE name LIKE :name";
+        $this->db->query($query);
+        $this->db->bind("name", $name);
+        return $this->db->resultSet();
+    }
+
+    public function getPaymentByName($name)
+    {
+        $query = "SELECT * FROM payment_bank WHERE name = :name";
+        $this->db->query($query);
+        $this->db->bind("name", $name);
+        return $this->db->single();
+    }
+
 }

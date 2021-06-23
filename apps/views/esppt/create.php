@@ -58,11 +58,10 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">Payment</label>
                 <div class="col-md-10">
-                    <select class="form-control" name="payment_bank" id="list-payment">
-                        <option value="0">
-                            pilih metode pembayaran
-                        </option>
-                    </select>
+                    <input type="text" name="payment_bank" id="payment_bank" class="form-control"
+                        placeholder="metode pembayaran" autocomplete="off">
+                    <span class="help-block form-error text-danger"></span>
+                    <div id="payment_option_list"></div>
                 </div>
             </div>
 

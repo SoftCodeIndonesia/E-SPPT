@@ -66,5 +66,15 @@ class M_object
         return $this->db->resultSet();
     }
 
+    public function delete_tax($tax_id)
+    {
+        $query = "DELETE FROM object_tax WHERE tax_id = :tax_id";
+
+        $this->db->query($query);
+        $this->db->bind('tax_id',$tax_id);
+
+        return $this->db->num_rows();
+    }
+
 
 }

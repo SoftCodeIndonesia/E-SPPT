@@ -4,24 +4,33 @@ $(document).ready(function () {
     var desa;
     
 
-    $.ajax({
-        type: "GET",
-        url: base_url + 'esppt/getPayment',
-        dataType: "json",
-        success: function (response) {
-            console.log(response);
-            if(response)
-            {
-                // $('#list-owner').append(content);
-            
-                $.each(response, function (i, value) { 
+    $('#payment_bank').keyup(function (e) { 
+        $(`#payment_option_list`).html(`<div class="app-spinner loading text-center"></div>`);
+        $.ajax({
+            type: "POST",
+            url: base_url + 'esppt/searchPayment',
+            data: {
+                keyword: $(this).val()
+            },
+            dataType: "json",
+            success: function (response) {
+                if(response !== '<div class="list-group" style="z-index: 99999"></div>'){
+                    setTimeout(() => {
+                    $(`#payment_option_list`).fadeIn();  
+                    $(`#payment_option_list`).html(response);  
                     
-                    var content = '';
-                    content += `<option value="${value.payment_id}">${value.name}</option>`;
-                    $('#list-payment').append(content);
-                });
+                    $(document).on('click', '.list-object', function(e){
+                        e.preventDefault();
+                        $(this).parent().parent().parent().children(0).val($(this).html());
+                        
+                        $(`#payment_option_list`).fadeOut();
+                    });
+                    }, 3000);
+                }else{
+                    $(`#payment_option_list`).fadeOut();
+                }
             }
-        }
+        });
     });
     
     
