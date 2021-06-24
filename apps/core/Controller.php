@@ -24,6 +24,9 @@ class Controller
         $this->js = $data['js'];
 
         $folder = explode('/', $view);
+
+        
+
         if ($folder[0] == 'login') {
             require_once '../apps/views/' . $view . '.php';
         } else {

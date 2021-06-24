@@ -23,6 +23,7 @@
 
 <!-- START SCRIPTS -->
 
+
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?= BASE_URL ?>assets/vendor/js/vendor/bootstrap/bootstrap.min.js"></script>
@@ -125,6 +126,9 @@ const capitalize = (s) => {
 <script type="text/javascript" src="<?= BASE_URL ?>assets/js/<?= $value ?>"></script>
 <?php endforeach; ?>
 <?php endif; ?>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsaKH8m6538pVGo6tbUWgqM_hfjyhRmGk&libraries=localContext&v=beta&callback=initMap">
+</script>
 </body>
 
 </html>

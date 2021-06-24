@@ -6,6 +6,9 @@ class Dashboard extends Controller
 
     public function __construct()
     {
+        if(!isset($_SESSION['userdata'])){
+            header('location: ' . BASE_URL . 'login');
+        }
         $this->modelMenu = $this->model('M_menu');
     }
 

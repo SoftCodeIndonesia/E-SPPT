@@ -65,6 +65,7 @@
                 </div>
             </div>
 
+
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table table-striped table-bordered datatable-basic dataTable no-footer"
@@ -125,6 +126,31 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 100px">
+                <label class="col-md-2 control-label">Koordinat Latitude</label>
+                <div class="col-md-10">
+                    <input type="text" name="lat" id="lat" class="form-control" placeholder="-74837483743"
+                        autocomplete="off">
+                    <span class="help-block form-error text-danger"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Koordinat longitude</label>
+                <div class="col-md-10">
+                    <input type="text" name="lng" id="lng" class="form-control" placeholder="-74837483743"
+                        autocomplete="off">
+                    <span class="help-block form-error text-danger"></span>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="map" style="height: 500px;">
+
+                    </div>
                 </div>
             </div>
             <!-- <div class="form-group">

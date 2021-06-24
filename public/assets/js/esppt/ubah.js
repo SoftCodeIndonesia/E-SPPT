@@ -1,3 +1,36 @@
+function initMap() {
+    const myLatlng = { lat: -7.0418597, lng: 109.5009834 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: myLatlng,
+    });
+    // Create the initial InfoWindow.
+    let infoWindow = new google.maps.InfoWindow({
+        content: "Klik untuk mendapatkan garis latitude dan longitude",
+        position: myLatlng,
+    });
+    infoWindow.open(map);
+    // Configure the click listener.
+    map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+        });
+        infoWindow.setContent(
+            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+        );
+
+        infoWindow.open(map);
+
+        var jsonLatLang = mapsMouseEvent.latLng.toJSON();
+        console.log(mapsMouseEvent.latLng.toJSON().lat);
+        $('#lat').val(jsonLatLang.lat)
+        $('#lng').val(jsonLatLang.lng)
+
+    });
+}
 $(document).ready(function () {
     index = 0;
     var owner;
@@ -6,6 +39,8 @@ $(document).ready(function () {
     var date;
     var payment_id;
     var payment_name;
+    var lat;
+    var lng;
 
     $.ajax({
         type: "POST",
@@ -71,6 +106,8 @@ $(document).ready(function () {
             pbb_terhutang = response.pbb_terhutang;
             payment_id = response.payment_id;
             payment_name = response.payment;
+            lat = response.lat;
+            lng = response.lng;
             // date = ;
         }
     });
@@ -94,9 +131,10 @@ $(document).ready(function () {
                     $(`#payment_option_list`).fadeIn();  
                     $(`#payment_option_list`).html(response);  
                     
-                    $(document).on('click', '.list-object', function(e){
+                    $(document).on('click', '.list-payment', function(e){
+                        console.log('ok');
                         e.preventDefault();
-                        $(this).parent().parent().parent().children(0).val($(this).html());
+                        $('input[name="payment_bank"]').val($(this).html());
                         
                         $(`#payment_option_list`).fadeOut();
                     });
@@ -118,6 +156,8 @@ $(document).ready(function () {
             $('input[name="nop"]').val(nop);
             $('input[name="pbb_terhutang"]').val(pbb_terhutang);
             $('#payment_bank').val(payment_name);
+            $('#lat').val(lat);
+            $('#lng').val(lng);
             if(response)
             {
                 // $('#list-owner').append(content);
@@ -127,9 +167,9 @@ $(document).ready(function () {
                     var content = '';
                     if(value.owner_id == owner_id)
                     {
-                        content += `<option value="${value.address_id}" selected>${value.name}</option>`;
+                        content += `<option value="${value.owner_id}" selected>${value.name}</option>`;
                     }else{
-                        content += `<option value="${value.address_id}">${value.name}</option>`;
+                        content += `<option value="${value.owner_id}">${value.name}</option>`;
                     }
                     $('#list-owner').append(content);
                 });
@@ -148,24 +188,26 @@ $(document).ready(function () {
         e.preventDefault();
         var tax_id = $(this).data('id');
 
-        var deleted = $.ajax({
-            type: "POST",
-            url: base_url + 'esppt/delete_tax',
-            data: {
-                tax_id: tax_id
-            },
-            dataType: "json",
-            success: function (response) {
-                if(response > 0){
-                    callbackAlert("Success","Data berhasil dihapus!", "success");
-                    table.destroy();
-                    table = dataTablesCreated();
-                    
-                }else{
-                    failledCallback("Data gagal dihapus!");
+        var deleted = function () { 
+            $.ajax({
+                type: "POST",
+                url: base_url + 'esppt/delete_tax',
+                data: {
+                    tax_id: tax_id
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response > 0){
+                        callbackAlert("Success","Data berhasil dihapus!", "success");
+                        table.destroy();
+                        table = dataTablesCreated();
+                        
+                    }else{
+                        failledCallback("Data gagal dihapus!");
+                    }
                 }
-            }
-        });
+            })
+         };
 
         var title = "Apakah kamu yakin?";
         var text = "data akan terhapus secara permanent!";
@@ -223,6 +265,59 @@ $(document).ready(function () {
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return rupiah;
     }
+
+    $(document).on('keyup', '.nama-object-pajak', function (e) {
+        var index = $(this).data('index');
+        var fild = $(this);
+        $(`#nama_object_pajak_${index}`).html(`<div class="app-spinner loading text-center"></div>`);
+        console.log(index);
+        if($(this).val() !== ''){
+            $.ajax({
+                type: "POST",
+                url: base_url + 'esppt/searchObject',
+                data: {
+                    keyword: $(this).val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response !== '<div class="list-group" style="z-index: 99999"></div>'){
+                        setTimeout(() => {
+                        $(`#nama_object_pajak_${index}`).fadeIn();  
+                        $(`#nama_object_pajak_${index}`).html(response);  
+                        
+                        $(document).on('click', '.list-object', function(e){
+                            
+                            e.preventDefault();
+                            $(`input[name="nama_object_pajak[${index}]"`).val($(this).html());
+                            // $(this).parent().parent().parent().children(0).val($(this).html());
+                            
+                            $(`#nama_object_pajak_${index}`).fadeOut();
+                        });
+                        }, 3000);
+                    }else{
+                        $(`#nama_object_pajak_${index}`).fadeOut();
+                    }
+                }
+            });
+        }
+        
+    })
+
+    $('#form-create').submit(function (e) { 
+       
+        if($('input[name="due_date"]').val() == ''){
+            e.preventDefault();
+            $('.validate_due_date').html('Tanggal jatuh tempo tidak boleh kosong!');
+        }else if($("#lat").val() == ''){
+            $('.validate_lat').html('latitude tidak boleh kosong!');
+            e.preventDefault();
+        }else if($("#lng").val() == ''){
+            $('.validate_lat').html('longitude tidak boleh kosong!');
+            e.preventDefault();
+        }
+        
+        
+    });
 });
 
 function dataTablesCreated() {

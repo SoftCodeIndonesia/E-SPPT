@@ -152,10 +152,10 @@
                                     
             if($payment > 0){
                 foreach ($payment as $key => $value) {
-                    $output .= '<a href="#" class="list-group-item list-object">'. $value['name'] .'</a> ';  
+                    $output .= '<a href="#" class="list-group-item list-payment">'. $value['name'] .'</a> ';  
                 }
             } else {
-                $output .= '<a href="#" class="list-group-item list-object">Data kosong</a> ';  
+                $output .= '<a href="#" class="list-group-item list-payment">Data kosong</a> ';  
             }  
             $output .= '</div>';
             echo json_encode($output);
@@ -164,14 +164,28 @@
         public function streCreated()
         {
             // var_dump($_POST);
+            $payment_id = 0;
+            $payment = $this->model('M_payment')->getPaymentByName($_POST['payment_bank']);
+            if($payment){
+                $payment_id = $payment['payment_id'];
+            }else{
+                $paymentInsert['name'] = $keyword;
+                $paymentInsert['created_at'] = time();
+                $paymentInsert['created_by'] = $_SESSION['userdata']['user_id'];
+
+                $payment_id = $this->model('M_payment')->insert($paymentInsert);
+            }
+
             $sppt['unique_id'] = 'E-SPPT' . time();
             $sppt['owner_id'] = $_POST['owner'];
-            $sppt['payment_id'] = $_POST['payment_bank'];
+            $sppt['payment_id'] = $payment_id;
             $sppt['nop'] = $_POST['nop'];
             $sppt['pbb_terhutang'] = $_POST['pbb_terhutang'];
             $sppt['due_date'] = strtotime($_POST['due_date']);
             $sppt['created_at'] = time();
             $sppt['created_by'] = $_SESSION['userdata']['user_id'];
+            $sppt['lat'] = $_POST['lat'];
+            $sppt['lng'] = $_POST['lng'];
             $sppt_id = $this->modelSppt->insert($sppt);
             
             foreach ($_POST['nama_object_pajak'] as $key => $value) {
@@ -222,7 +236,7 @@
                 $data = [];
 
                 $data[] = '<tr role="row" class="odd"><td><a href="" data-id="'.$value['tax_id'].'" class="btn btn-default btn-delete-object btn-icon btn-danger text-white"><span class="icon-trash2 color-white"></span></a></td>';
-                $data[] = '<td class=""><input type="text" value="'.$value['name'].'" name="nama_object_pajak['.$key.']" data-index="'.$key.'" id="fild_object_pajak_'.$key.'" class="form-control nama-object-pajak" placeholder="Nama object pajak" autocomplete="off"><input type="hidden" value="'.$value['tax_id'].'" name="tax_id['.$key.']" class="form-control"><div id="nama_object_pajak_0"></div> </td>';
+                $data[] = '<td class=""><input type="text" value="'.$value['name'].'" name="nama_object_pajak['.$key.']" data-index="'.$key.'" id="fild_object_pajak_'.$key.'" class="form-control nama-object-pajak" placeholder="Nama object pajak" autocomplete="off"/><input type="hidden" value="'.$value['tax_id'].'" name="tax_id['.$key.']" class="form-control"><div id="nama_object_pajak_0"></div> </td>';
                 $data[] = '<td class="sorting_1"><input type="text" value="'.$value['luas'].'" name="luas['.$key.']" id="luas_0" data-index="'.$key.'" class="form-control luas" placeholder="0" autocomplete="off"></td>';
                 $data[] = '<td><input type="text" value="'.$value['kelas'].'" name="kelas['.$key.']" id="kelas_'.$key.'" data-index="'.$key.'" class="form-control kelas" placeholder="0" autocomplete="off"></td>';
                 $data[] = '<td><input type="text" value="'.$value['njop_value'].'" name="njop['.$key.']" id="njop_'.$key.'" data-index="'.$key.'" class="form-control njop" placeholder="0" autocomplete="off"></td>';
@@ -255,8 +269,9 @@
 
         public function storeUpdate()
         {
-            var_dump($_POST);
-
+            
+            
+           
             $payment_id = 0;
 
             $keyword = $_POST['payment_bank'];
@@ -268,8 +283,10 @@
                 $paymentInsert['created_at'] = time();
                 $paymentInsert['created_by'] = $_SESSION['userdata']['user_id'];
 
-                $payment_id = $this->mode('M_payment')->insert($paymentInsert);
+                $payment_id = $this->model('M_payment')->insert($paymentInsert);
             }
+
+
             $sppt_id = $_POST['sppt_id'];
             $sppt['owner_id'] = $_POST['owner'];
             $sppt['payment_id'] = $payment_id;
@@ -278,7 +295,10 @@
             $sppt['due_date'] = strtotime($_POST['due_date']);
             $sppt['created_at'] = time();
             $sppt['created_by'] = $_SESSION['userdata']['user_id'];
-            $sppt_id = $this->modelSppt->updateSppt($sppt);
+            $sppt['lat'] = $_POST['lat'];
+            $sppt['lng'] = $_POST['lng'];
+            
+            $sppt_id = $this->modelSppt->updateSppt($sppt,$sppt_id);
             
             foreach ($_POST['nama_object_pajak'] as $key => $value) {
             
@@ -288,27 +308,44 @@
                 $object['created_by'] = $_SESSION['userdata']['user_id'];
                 
                 $object_id = $this->modelObject->getObjectByName($object['name']);
-
+                $tax_id = $_POST['tax_id'][$key];
+               
+                
                 if($object_id){
-                    $tax_id = $_POST['tax_id'][$key];
-                    $object_tax['sppt_id'] = $sppt['unique_id'];
+                    
+                    
+                    
                     $object_tax['object_id'] = $object_id['object_id'];
                     $object_tax['luas'] = $_POST['luas'][$key];
                     $object_tax['kelas'] = $_POST['kelas'][$key];
                     $object_tax['njop_value'] = $_POST['njop'][$key];
                     $object_tax['total_njop'] = $_POST['total_njop'][$key];
                     
-                    $this->modelObject->update_object_tax($object_tax, $tax_id);
+                    if($tax_id){
+                        $this->modelObject->update_object_tax($object_tax, $tax_id);
+                    }else{
+                        
+                        $object_tax['sppt_id'] = $_POST['sppt_id'];
+                        
+                        $this->modelObject->insert_object_tax($object_tax);
+                    }
                 }else{
                     $object_id = $this->modelObject->insert($object);
-                    $object_tax['sppt_id'] = $sppt['unique_id'];
+                    
                     $object_tax['object_id'] = $object_id;
                     $object_tax['luas'] = $_POST['luas'][$key];
                     $object_tax['kelas'] = $_POST['kelas'][$key];
                     $object_tax['njop_value'] = $_POST['njop'][$key];
                     $object_tax['total_njop'] = $_POST['total_njop'][$key];
                     
-                    $this->modelObject->update_object_tax($object_tax, $tax_id);
+                    
+                    if($tax_id){
+                        $this->modelObject->update_object_tax($object_tax, $tax_id);
+                    }else{
+                       
+                        $object_tax['sppt_id'] = $_POST['sppt_id'];
+                        $this->modelObject->insert_object_tax($object_tax);
+                    }
                 }
             }
             
@@ -320,6 +357,27 @@
             $tax_id = $_POST['tax_id'];
 
             echo json_encode($this->modelObject->delete_tax($tax_id));
+        }
+
+        public function delete_sppt()
+        {
+            $sppt_id = $_POST['sppt_id'];
+            $callback = 0;
+            if($this->modelObject->deleteBySpptId($sppt_id) > 0){
+                $callback = $this->modelSppt->deleteById($sppt_id);
+            }
+
+            echo json_encode($callback);
+        }
+
+        public function detail($sppt_id)
+        {
+            $this->permission = 'read detail sppt';
+            $data['title'] = 'E - SPPT';
+            $data['js'] = [
+                'esppt/detail.js'
+            ];
+            $this->view('esppt/detail', $data);
         }
     }
     

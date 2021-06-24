@@ -1,5 +1,41 @@
 var index = 1;
+function initMap() {
+    const myLatlng = { lat: -7.0418597, lng: 109.5009834 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: myLatlng,
+    });
+    // Create the initial InfoWindow.
+    let infoWindow = new google.maps.InfoWindow({
+        content: "Klik untuk mendapatkan garis latitude dan longitude",
+        position: myLatlng,
+    });
+    infoWindow.open(map);
+    // Configure the click listener.
+    map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+        });
+        infoWindow.setContent(
+            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+        );
+
+        infoWindow.open(map);
+
+        var jsonLatLang = mapsMouseEvent.latLng.toJSON();
+        console.log(mapsMouseEvent.latLng.toJSON().lat);
+        $('#lat').val(jsonLatLang.lat)
+        $('#lng').val(jsonLatLang.lng)
+
+    });
+}
 $(document).ready(function () {
+    
+
+
     var kecamatan = "sd";
     var desa;
     
@@ -19,9 +55,10 @@ $(document).ready(function () {
                     $(`#payment_option_list`).fadeIn();  
                     $(`#payment_option_list`).html(response);  
                     
-                    $(document).on('click', '.list-object', function(e){
+                    $(document).on('click', '.list-payment', function(e){
+                        console.log('ok');
                         e.preventDefault();
-                        $(this).parent().parent().parent().children(0).val($(this).html());
+                        $('input[name="payment_bank"]').val($(this).html());
                         
                         $(`#payment_option_list`).fadeOut();
                     });
@@ -156,7 +193,7 @@ $(document).ready(function () {
                 $.each(response, function (i, value) { 
                     
                     var content = '';
-                    content += `<option value="${value.address_id}">${value.name}</option>`;
+                    content += `<option value="${value.owner_id}">${value.name}</option>`;
                     $('#list-owner').append(content);
                 });
             }

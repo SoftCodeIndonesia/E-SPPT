@@ -57,7 +57,7 @@ class M_sppt
     public function insert($data)
     {
         
-        $query = "INSERT INTO sppt VALUES(:sppt_id, :owner_id, :payment_id, :nop, :pbb_terhutang, :due_date, :created_at, :created_by)";
+        $query = "INSERT INTO sppt VALUES(:sppt_id, :owner_id, :payment_id, :nop, :pbb_terhutang, :due_date, :created_at, :created_by, :lat, :lng)";
         
         $this->db->query($query);
 
@@ -69,6 +69,8 @@ class M_sppt
         $this->db->bind('due_date', $data['due_date']);
         $this->db->bind('created_at', $data['created_at']);
         $this->db->bind('created_by', $data['created_by']);
+        $this->db->bind('lat', $data['lat']);
+        $this->db->bind('lng', $data['lng']);
 
         
         return $this->db->num_rows();
@@ -85,12 +87,13 @@ class M_sppt
         return $this->db->single();
     }
 
-    public function updateSppt($data)
+    public function updateSppt($data, $sppt_id)
     {
-        $query = "UPDATE sppt SET owner_id = :owner_id, payment_id = :payment_id, nop = :nop, pbb_terhutang = :pbb_terhutang, due_date = :due_date, created_at = :created_at, created_by = :created_by";
+        $query = "UPDATE sppt SET owner_id = :owner_id, payment_id = :payment_id, nop = :nop, pbb_terhutang = :pbb_terhutang, due_date = :due_date, created_at = :created_at, created_by = :created_by, lat = :lat, lng = :lng WHERE sppt_id = :sppt_id";
+        
         $this->db->query($query);
 
-        $this->db->bind("sppt_id", $data['unique_id']);
+        $this->db->bind("sppt_id", $sppt_id);
         $this->db->bind('owner_id', $data['owner_id']);
         $this->db->bind('payment_id', $data['payment_id']);
         $this->db->bind('nop', $data['nop']);
@@ -98,9 +101,21 @@ class M_sppt
         $this->db->bind('due_date', $data['due_date']);
         $this->db->bind('created_at', $data['created_at']);
         $this->db->bind('created_by', $data['created_by']);
+        $this->db->bind('lat', $data['lat']);
+        $this->db->bind('lng', $data['lng']);
 
         
         return $this->db->num_rows();
+    }
+
+    public function deleteById($sppt_id)
+    {
+        $query = "DELETE FROM sppt WHERE sppt_id = :sppt_id";
+        $this->db->query($query);
+        $this->db->bind('sppt_id',$sppt_id);
+
+        return $this->db->num_rows();
+
     }
 
 }
