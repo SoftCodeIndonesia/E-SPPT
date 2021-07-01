@@ -57,7 +57,7 @@ class M_sppt
     public function insert($data)
     {
         
-        $query = "INSERT INTO sppt VALUES(:sppt_id, :owner_id, :payment_id, :nop, :pbb_terhutang, :due_date, :created_at, :created_by, :lat, :lng)";
+        $query = "INSERT INTO sppt VALUES(:sppt_id, :owner_id, :payment_id, :nop, :pbb_terhutang, :njkp, :due_date, :created_at, :created_by, :lat, :lng)";
         
         $this->db->query($query);
 
@@ -66,6 +66,7 @@ class M_sppt
         $this->db->bind('payment_id', $data['payment_id']);
         $this->db->bind('nop', $data['nop']);
         $this->db->bind('pbb_terhutang', $data['pbb_terhutang']);
+        $this->db->bind('njkp', $data['njkp']);
         $this->db->bind('due_date', $data['due_date']);
         $this->db->bind('created_at', $data['created_at']);
         $this->db->bind('created_by', $data['created_by']);
@@ -78,7 +79,7 @@ class M_sppt
 
     public function getSpptById($id)
     {
-        $query = "SELECT *,s.created_at as created_at,s.sppt_id as unique_id,o.name as owner, p.name as payment, u.name as created_by FROM sppt s LEFT JOIN owner o ON o.owner_id = s.owner_id LEFT JOIN payment_bank p ON p.payment_id = s.payment_id LEFT JOIN user u ON u.user_id = s.created_by WHERE s.sppt_id = :sppt_id";
+        $query = "SELECT *, from_unixtime(s.due_date,'%d %M %Y') as due_date,s.created_at as created_at,s.sppt_id as unique_id,o.name as owner, p.name as payment, u.name as created_by FROM sppt s LEFT JOIN owner o ON o.owner_id = s.owner_id LEFT JOIN payment_bank p ON p.payment_id = s.payment_id LEFT JOIN user u ON u.user_id = s.created_by LEFT JOIN address ad ON ad.address_id = o.address_id WHERE s.sppt_id = :sppt_id";
 
         $this->db->query($query);
 
@@ -89,7 +90,7 @@ class M_sppt
 
     public function updateSppt($data, $sppt_id)
     {
-        $query = "UPDATE sppt SET owner_id = :owner_id, payment_id = :payment_id, nop = :nop, pbb_terhutang = :pbb_terhutang, due_date = :due_date, created_at = :created_at, created_by = :created_by, lat = :lat, lng = :lng WHERE sppt_id = :sppt_id";
+        $query = "UPDATE sppt SET owner_id = :owner_id, payment_id = :payment_id, nop = :nop, pbb_terhutang = :pbb_terhutang,njkp = :njkp, due_date = :due_date, created_at = :created_at, created_by = :created_by, lat = :lat, lng = :lng WHERE sppt_id = :sppt_id";
         
         $this->db->query($query);
 
@@ -98,6 +99,7 @@ class M_sppt
         $this->db->bind('payment_id', $data['payment_id']);
         $this->db->bind('nop', $data['nop']);
         $this->db->bind('pbb_terhutang', $data['pbb_terhutang']);
+        $this->db->bind('njkp', $data['njkp']);
         $this->db->bind('due_date', $data['due_date']);
         $this->db->bind('created_at', $data['created_at']);
         $this->db->bind('created_by', $data['created_by']);

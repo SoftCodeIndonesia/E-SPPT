@@ -45,6 +45,14 @@
             </div>
 
             <div class="form-group">
+                <label class="col-md-2 control-label" for="nop">NJKP (Nilai jual kena pajak)</label>
+                <div class="col-md-10">
+                    <input type="text" name="njkp" id="njkp" class="form-control" placeholder="0" autocomplete="off">
+                    <span class="help-block form-error text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-md-2 control-label" for="nop">Jatuh tempo</label>
                 <div class="col-md-10">
                     <div class="input-group">

@@ -49,7 +49,8 @@ class Login extends Controller
 
     public function logOut()
     {
-        $this->helper->session_destroy(['userdata']);
+        $helper = new Helper;
+        $helper->session_destroy(['userdata']);
 
         $this->redirect('Login');
     }

@@ -24,6 +24,30 @@
             $this->view('esppt/index', $data);
         }
 
+        public function detail($sppt_id)
+        {
+        
+            $this->permission = 'read detail sppt';
+            $data['title'] = 'Detail SPPT';
+            $data['js'] = [
+                'esppt/detail.js'
+            ];
+            $this->view('esppt/detail', $data);
+        }
+
+        public function toLocation($sppt_id)
+        {
+            $sppt = $this->modelSppt->getSpptById($sppt_id);
+
+            $_SESSION['lat'] = $sppt['lat'];
+            $_SESSION['lng'] = $sppt['lng'];
+
+            $this->permission = 'read detail sppt';
+            $data['title'] = 'Lokasi - SPPT';
+            
+            $this->view('esppt/location', $data);
+        }
+
         public function getAllSppt()
         {
 
@@ -45,9 +69,13 @@
                         $linkUbah = '<a href="' . BASE_URL . 'esppt/ubah/' . $value['sppt_id'] . '" class="text-success" id="btn-ubah" data-id="' . $value['sppt_id'] . '">Ubah</a>';
                         $ul = $ul . '<li>' . $linkUbah . '</li>';
                     }
+                    $linkViewLocation = '<a href="'.BASE_URL.'esppt/toLocation/'.$value['sppt_id'].'" class="text-info">Lihat lokasi</a>';
+                    $ul = $ul . '<li>' . $linkViewLocation . '</li>';
                 }else{
                     $linkLogin = '<a href="#" class="text-danger">Login</a>';
+                    $linkViewLocation = '<a href="'.BASE_URL.'esppt/toLocation/'.$value['sppt_id'].'" class="text-info">Lihat lokasi</a>';
                     $ul = $ul . '<li>' . $linkLogin . '</li>';
+                    $ul = $ul . '<li>' . $linkViewLocation . '</li>';
                 }
                 $ul = $ul . '</ul>';
                 $data[] = '<tr><td><a href="'. BASE_URL .'esppt/detail/'. $value['sppt_id'] .'" data-id="'.$value['sppt_id'].'" class="list-group-condensed name-title">' .$value['unique_id'] . '</></td>';
@@ -181,11 +209,13 @@
             $sppt['payment_id'] = $payment_id;
             $sppt['nop'] = $_POST['nop'];
             $sppt['pbb_terhutang'] = $_POST['pbb_terhutang'];
+            $sppt['njkp'] = str_replace('.', '', $_POST['njkp']);
             $sppt['due_date'] = strtotime($_POST['due_date']);
             $sppt['created_at'] = time();
             $sppt['created_by'] = $_SESSION['userdata']['user_id'];
             $sppt['lat'] = $_POST['lat'];
             $sppt['lng'] = $_POST['lng'];
+            
             $sppt_id = $this->modelSppt->insert($sppt);
             
             foreach ($_POST['nama_object_pajak'] as $key => $value) {
@@ -256,6 +286,47 @@
             exit();
         }
 
+        public function getObjectTaxForDetail()
+        {
+            $sppt_id = $_POST['sppt_id'];
+
+            
+
+            $sppt = $this->modelObject->getObjectTaxBySpptId($sppt_id);
+            
+            $data_sppt = [];
+            $no = 1;
+            foreach ($sppt as $key => $value) {
+                $data = [];
+
+                
+                $data[] = '<td class=""><input type="text" readonly value="'.$value['name'].'" name="nama_object_pajak['.$key.']" data-index="'.$key.'" id="fild_object_pajak_'.$key.'" class="form-control nama-object-pajak" placeholder="Nama object pajak" autocomplete="off"/><input type="hidden" value="'.$value['tax_id'].'" name="tax_id['.$key.']" class="form-control"><div id="nama_object_pajak_0"></div> </td>';
+                $data[] = '<td class="sorting_1"><input readonly type="text" value="'.$value['luas'].'" name="luas['.$key.']" id="luas_'.$key.'" data-index="'.$key.'" class="form-control luas" placeholder="0" autocomplete="off"></td>';
+                $data[] = '<td><input type="text" readonly value="'.$value['kelas'].'" name="kelas['.$key.']" id="kelas_'.$key.'" data-index="'.$key.'" class="form-control kelas" placeholder="0" autocomplete="off"></td>';
+                $data[] = '<td><input type="text" readonly value="'.$value['njop_value'].'" name="njop['.$key.']" id="njop_'.$key.'" data-index="'.$key.'" class="form-control njop" placeholder="0" autocomplete="off"></td>';
+                $data[] = '<td><input type="text" readonly value="'.$this->rupiah($value['total_njop']).'" name="total_njop['.$key.']" id="total_njop_'.$key.'" data-index="'.$key.'" class="form-control total_njop" placeholder="0" autocomplete="off"></td></tr>';
+                $data_sppt[] = $data;
+            }
+
+            $output = array(
+                "draw" => $_POST['draw'],
+                "recordsTotal" => count($data_sppt),
+                "recordsFiltered" => count($data_sppt),
+                "data" => $data_sppt,
+            );
+
+            
+            echo json_encode($output);
+            exit();
+        }
+
+        function rupiah($angka){
+	
+            $hasil_rupiah = number_format($angka,2,',','.');
+            return $hasil_rupiah;
+         
+        }
+
         public function getCountObjectTax()
         {
             $sppt_id = $_POST['sppt_id'];
@@ -292,6 +363,7 @@
             $sppt['payment_id'] = $payment_id;
             $sppt['nop'] = $_POST['nop'];
             $sppt['pbb_terhutang'] = $_POST['pbb_terhutang'];
+            $sppt['njkp'] = str_replace('.', '', $_POST['njkp']);
             $sppt['due_date'] = strtotime($_POST['due_date']);
             $sppt['created_at'] = time();
             $sppt['created_by'] = $_SESSION['userdata']['user_id'];
@@ -370,14 +442,13 @@
             echo json_encode($callback);
         }
 
-        public function detail($sppt_id)
+        public function getTotalNjop()
         {
-            $this->permission = 'read detail sppt';
-            $data['title'] = 'E - SPPT';
-            $data['js'] = [
-                'esppt/detail.js'
-            ];
-            $this->view('esppt/detail', $data);
+            $sppt_id = $_POST['sppt_id'];
+
+            $tax = $this->modelObject->totalNjop($sppt_id);
+            
+            echo json_encode($tax);
         }
     }
     

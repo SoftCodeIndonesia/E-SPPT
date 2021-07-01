@@ -31,6 +31,7 @@ function initMap() {
 
     });
 }
+
 $(document).ready(function () {
     index = 0;
     var owner;
@@ -41,6 +42,7 @@ $(document).ready(function () {
     var payment_name;
     var lat;
     var lng;
+    var njkp;
 
     $.ajax({
         type: "POST",
@@ -90,7 +92,7 @@ $(document).ready(function () {
         $('#tbody').append(content);
     });
     
-
+    var table = dataTablesCreated();
 
     $.ajax({
         type: "POST",
@@ -108,12 +110,13 @@ $(document).ready(function () {
             payment_name = response.payment;
             lat = response.lat;
             lng = response.lng;
+            njkp = response.njkp;
             // date = ;
         }
     });
 
    
-    var table = dataTablesCreated();
+    
 
     
     $('#payment_bank').keyup(function (e) { 
@@ -152,12 +155,13 @@ $(document).ready(function () {
         url: base_url + 'esppt/getAllOwner',
         dataType: "json",
         success: function (response) {
-            console.log(owner_id);
+            
             $('input[name="nop"]').val(nop);
             $('input[name="pbb_terhutang"]').val(pbb_terhutang);
             $('#payment_bank').val(payment_name);
             $('#lat').val(lat);
             $('#lng').val(lng);
+            $('#njkp').val(formatRupiah(njkp));
             if(response)
             {
                 // $('#list-owner').append(content);
@@ -218,6 +222,16 @@ $(document).ready(function () {
         alertConfirm(title,text,icon,buttons,dangerMode,deleted,null);
         console.log();
     })
+
+    $(document).on('keyup', '#njkp', function(e){
+       
+
+        var value = $(this).val();
+
+        console.log(value);
+        var valueFormat = formatRupiah(value);
+        $(this).val(valueFormat);
+    });
 
     $(document).on('keyup', '.luas', function(e){
         var index = $(this).data('index');
@@ -321,7 +335,7 @@ $(document).ready(function () {
 });
 
 function dataTablesCreated() {
-    return $('#DataTables_Table_0').DataTable({
+    return $('#DataTables_Table_1').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
         "destroy": true,

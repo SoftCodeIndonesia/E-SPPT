@@ -178,6 +178,16 @@ $(document).ready(function () {
         $(`#total_njop_${index}`).val(valueFormat);
     });
 
+    $(document).on('keyup', '#njkp', function(e){
+       
+
+        var value = $(this).val();
+
+        console.log(value);
+        var valueFormat = formatRupiah(value);
+        $(this).val(valueFormat);
+    });
+
     
 
     $.ajax({

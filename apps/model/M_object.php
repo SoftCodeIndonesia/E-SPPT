@@ -51,7 +51,7 @@ class M_object
         $this->db->bind("luas", $data['luas']);
         $this->db->bind("kelas", $data['kelas']);
         $this->db->bind("njop_value", $data['njop_value']);
-        $this->db->bind("total_njop", $data['total_njop']);
+        $this->db->bind("total_njop", str_replace('.','',$data['total_njop']));
 
         return $this->db->num_rows();
     }
@@ -93,6 +93,15 @@ class M_object
         $this->db->bind('sppt_id', $sppt_id);
 
         return $this->db->resultSet();
+    }
+
+    public function totalNjop($sppt_id)
+    {
+        $query = "SELECT sum(ot.total_njop) as total_njop FROM object_tax ot LEFT JOIN object o ON o.object_id = ot.object_id WHERE ot.sppt_id = :sppt_id GROUP BY ot.sppt_id";
+
+        $this->db->query($query);
+        $this->db->bind('sppt_id', $sppt_id);
+        return $this->db->single();
     }
 
     public function delete_tax($tax_id)
